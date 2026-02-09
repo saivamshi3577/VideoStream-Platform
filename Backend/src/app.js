@@ -6,13 +6,7 @@ const testRoutes = require("./routes/test.routes");
 const videoRoutes = require("./routes/video.routes");
 const app = express();
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://your-frontend-domain.vercel.app" // 👈 ADD THIS
-  ],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
