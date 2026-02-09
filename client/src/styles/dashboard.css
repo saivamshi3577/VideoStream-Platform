@@ -1,0 +1,86 @@
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.video-card {
+  background: #111;
+  padding: 16px;
+  border-radius: 12px;
+  color: white;
+}
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.badge.uploaded { background: gray; }
+.badge.processing { background: orange; }
+.badge.safe { background: green; }
+.badge.flagged { background: red; }
+
+.progress-bar {
+  background: #333;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 10px 0;
+}
+
+.progress-bar div {
+  height: 100%;
+  background: #00ffcc;
+}
+
+button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 8px;
+  background: #00ffcc;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+.dashboard {
+  max-width: 900px;
+  margin: 40px auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.dashboard button {
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  background: #1976d2;
+  color: white;
+  border-radius: 4px;
+}
+
+.dashboard button:hover {
+  background: #125aa3;
+}
+
+.logout-btn {
+  background: #e53935;
+}
+
+.logout-btn:hover {
+  background: #c62828;
+}
