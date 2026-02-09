@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 
 export const SocketContext = createContext(null);
 
-const socket = io("http://localhost:5000");
+const socket = io("https://videostream-platform.onrender.com");
 
 export const SocketProvider = ({ children }) => (
   <SocketContext.Provider value={socket}>

@@ -16,7 +16,7 @@ export default function Upload() {
     formData.append("video", file);
     formData.append("title", title);
 
-    await axios.post("http://localhost:5000/api/videos/upload", formData, {
+    await axios.post("https://videostream-platform.onrender.com/api/videos/upload", formData, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       },
