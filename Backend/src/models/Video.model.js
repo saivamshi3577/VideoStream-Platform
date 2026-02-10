@@ -7,6 +7,11 @@ const videoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  category: {
+  type: String,
+  default: "General"
+},
+
 
   cloudinaryId: {
     type: String,

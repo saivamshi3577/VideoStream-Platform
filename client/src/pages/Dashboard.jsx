@@ -7,14 +7,22 @@ import "../styles/dashboard.css";
 
 export default function Dashboard() {
   const [videos, setVideos] = useState([]);
+
+  // 🔍 Filters
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchDate, setSearchDate] = useState("");
+  const [minSize, setMinSize] = useState("");
+
   const socket = useContext(SocketContext);
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // 📥 Load videos
   useEffect(() => {
     getVideos().then(res => setVideos(res.data));
   }, []);
 
+  // 🔄 Real-time updates
   const updateVideo = ({ videoId, progress, status, sensitivityScore }) => {
     setVideos(prev =>
       prev.map(video =>
@@ -37,11 +45,30 @@ export default function Dashboard() {
     };
   }, [socket]);
 
-  // 🚪 Logout handler
+  // 🚪 Logout
   const handleLogout = () => {
-    logout();        // remove token + clear user
-    navigate("/");  // redirect to login
+    logout();
+    navigate("/");
   };
+
+  // 🧠 Advanced Filtering Logic
+  const filteredVideos = videos.filter(video => {
+    // Status filter
+    if (statusFilter !== "all" && video.status !== statusFilter) return false;
+
+    // Date filter
+    if (searchDate) {
+      const videoDate = new Date(video.createdAt)
+        .toISOString()
+        .split("T")[0];
+      if (videoDate !== searchDate) return false;
+    }
+
+    // File size filter (MB)
+    if (minSize && video.size < minSize * 1024 * 1024) return false;
+
+    return true;
+  });
 
   return (
     <div className="dashboard">
@@ -62,32 +89,60 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {videos.map(video => (
-        <div className="video-card" key={video._id}>
-          <h3>{video.title}</h3>
+      {/* 🔍 Filters */}
+      <div className="filters">
+        <select onChange={(e) => setStatusFilter(e.target.value)}>
+          <option value="all">All Videos</option>
+          <option value="completed">Safe</option>
+          <option value="flagged">Flagged</option>
+        </select>
 
-          <span className={`badge ${video.status}`}>
-            {video.status}
-          </span>
+        <input
+          type="date"
+          onChange={(e) => setSearchDate(e.target.value)}
+        />
 
-          <div className="progress-bar">
-            <div style={{ width: `${video.progress}%` }} />
-          </div>
+        <input
+          type="number"
+          placeholder="Min size (MB)"
+          onChange={(e) => setMinSize(e.target.value)}
+        />
+      </div>
 
-          <p>Progress: {video.progress}%</p>
+      {/* 🎥 Video Cards */}
+     {/* 🎥 Video Cards */}
+<div className="video-grid">
+  {filteredVideos.map(video => (
+    <div className="video-card" key={video._id}>
+      <h3>{video.title}</h3>
 
-          {video.sensitivityScore !== undefined && (
-            <p>Score: {video.sensitivityScore}</p>
-          )}
+      <span className={`badge ${video.status}`}>
+        {video.status}
+      </span>
 
-          <button
-            disabled={video.status !== "completed" && video.status !== "flagged"}
-            onClick={() => navigate(`/player/${video._id}`)}
-          >
-            ▶ Play
-          </button>
-        </div>
-      ))}
+      <div className="progress-bar">
+        <div style={{ width: `${video.progress}%` }} />
+      </div>
+
+      <p>Progress: {video.progress}%</p>
+
+      {video.sensitivityScore !== undefined && (
+        <p>Sensitivity Score: {video.sensitivityScore}</p>
+      )}
+
+      <button
+        disabled={
+          video.status !== "completed" &&
+          video.status !== "flagged"
+        }
+        onClick={() => navigate(`/player/${video._id}`)}
+      >
+        ▶ Play
+      </button>
+    </div>
+  ))}
+</div>
+
     </div>
   );
 }
